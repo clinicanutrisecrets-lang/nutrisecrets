@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nutri Secrets</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --tiffany: #0ABDC0;
+    --tiffany-light: #E0F7F8;
+    --tiffany-dark: #078b8e;
+    --orange: #F97316;
+    --orange-light: #FFF0E6;
+    --orange-dark: #d95f0a;
+    --bg: #F7FAFA;
+    --white: #ffffff;
+    --text: #1a2e2e;
+    --text-muted: #5a7272;
+    --border: #d0e8e8;
+    --shadow: 0 4px 24px rgba(10,189,192,0.10);
+    --radius: 16px;
+    --radius-sm: 10px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--tiffany) 0%, var(--tiffany-dark) 100%);
+    padding: 0;
+    box-shadow: 0 2px 20px rgba(10,189,192,0.2);
+  }
+
+  .header-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 22px 32px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+
+  .logo-img-wrap {
+    flex-shrink: 0;
+  }
+
+  .header-logo {
+    height: 62px;
+    width: auto;
+    display: block;
+    filter: brightness(0) invert(1);
+  }
+
+  .header-tagline {
+    color: rgba(255,255,255,0.85);
+    font-size: 0.83rem;
+    font-weight: 300;
+    letter-spacing: 0.3px;
+  }
+
+  /* TABS */
+  .tabs-bar {
+    background: white;
+    border-bottom: 2px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+  }
+
+  .tabs-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    padding: 0 32px;
+    gap: 4px;
+  }
+
+  .tab-btn {
+    padding: 16px 22px;
+    border: none;
+    background: transparent;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    transition: all 0.2s;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+
+  .tab-btn:hover { color: var(--tiffany); }
+
+  .tab-btn.active {
+    color: var(--tiffany);
+    border-bottom-color: var(--tiffany);
+    font-weight: 600;
+  }
+
+  .tab-btn .tab-num {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--tiffany-light);
+    color: var(--tiffany-dark);
+    font-size: 0.75rem;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .tab-btn.active .tab-num {
+    background: var(--tiffany);
+    color: white;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 36px 32px 60px;
+  }
+
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; animation: fadeIn 0.3s ease; }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+  /* SECTION CARD */
+  .section-card {
+    background: white;
+    border-radius: var(--radius);
+    padding: 32px;
+    box-shadow: var(--shadow);
+    margin-bottom: 24px;
+    border: 1px solid var(--border);
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-title .icon { font-size: 1.3rem; }
+
+  .section-sub {
+    color: var(--text-muted);
+    font-size: 0.84rem;
+    margin-bottom: 22px;
+    line-height: 1.5;
+  }
+
+  /* UPLOAD AREA */
+  .upload-area {
+    border: 2.5px dashed var(--border);
+    border-radius: var(--radius);
+    padding: 40px 30px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.25s;
+    background: var(--tiffany-light);
+    position: relative;
+  }
+
+  .upload-area:hover, .upload-area.drag-over {
+    border-color: var(--tiffany);
+    background: #c8f0f1;
+  }
+
+  .upload-area input[type="file"] {
+    position: absolute; inset: 0; opacity: 0; cursor: pointer;
+  }
+
+  .upload-icon { font-size: 2.8rem; margin-bottom: 12px; }
+
+  .upload-area h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--tiffany-dark);
+    margin-bottom: 6px;
+  }
+
+  .upload-area p {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+  }
+
+  .file-preview {
+    display: none;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    background: var(--tiffany-light);
+    border-radius: var(--radius-sm);
+    border: 1.5px solid var(--tiffany);
+    margin-top: 16px;
+  }
+
+  .file-preview.show { display: flex; }
+
+  .file-preview .file-icon { font-size: 1.6rem; }
+
+  .file-preview .file-info { flex: 1; }
+  .file-preview .file-name { font-weight: 600; font-size: 0.88rem; color: var(--tiffany-dark); }
+  .file-preview .file-size { font-size: 0.78rem; color: var(--text-muted); }
+
+  .file-remove {
+    background: none; border: none; cursor: pointer;
+    color: var(--text-muted); font-size: 1.2rem;
+    padding: 4px; border-radius: 50%;
+    transition: all 0.2s;
+  }
+  .file-remove:hover { background: #fde; color: #c00; }
+
+  /* FORM ELEMENTS */
+  label.field-label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  textarea, input[type="text"], input[type="number"] {
+    width: 100%;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 13px 16px;
+    background: white;
+    color: var(--text);
+    transition: all 0.2s;
+    outline: none;
+    resize: vertical;
+  }
+
+  textarea:focus, input:focus {
+    border-color: var(--tiffany);
+    box-shadow: 0 0 0 3px rgba(10,189,192,0.12);
+  }
+
+  textarea { min-height: 110px; }
+
+  .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+
+  @media(max-width:700px) {
+    .row-2, .row-3 { grid-template-columns: 1fr; }
+  }
+
+  .field-group { margin-bottom: 22px; }
+
+  /* CHIPS */
+  .chips-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .chip {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 100px;
+    background: white;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.84rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s;
+    user-select: none;
+  }
+
+  .chip:hover { border-color: var(--tiffany); color: var(--tiffany); background: var(--tiffany-light); }
+
+  .chip.selected {
+    border-color: var(--tiffany);
+    background: var(--tiffany);
+    color: white;
+  }
+
+  .chip.meal-chip.selected {
+    border-color: var(--orange);
+    background: var(--orange);
+    color: white;
+  }
+
+  .chip.meal-chip:hover:not(.selected) { border-color: var(--orange); color: var(--orange); background: var(--orange-light); }
+
+  .chip .chip-icon { font-size: 1rem; }
+
+  /* NAVIGATION BUTTONS */
+  .nav-btns {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 32px;
+  }
+
+  .btn {
+    padding: 13px 28px;
+    border-radius: var(--radius-sm);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--tiffany) 0%, var(--tiffany-dark) 100%);
+    color: white;
+    box-shadow: 0 4px 14px rgba(10,189,192,0.35);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(10,189,192,0.45);
+  }
+
+  .btn-secondary {
+    background: white;
+    color: var(--text-muted);
+    border: 1.5px solid var(--border);
+  }
+
+  .btn-secondary:hover { border-color: var(--tiffany); color: var(--tiffany); }
+
+  .btn-orange {
+    background: linear-gradient(135deg, var(--orange) 0%, var(--orange-dark) 100%);
+    color: white;
+    box-shadow: 0 4px 14px rgba(249,115,22,0.35);
+    font-size: 1rem;
+    padding: 15px 36px;
+  }
+
+  .btn-orange:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 22px rgba(249,115,22,0.45);
+  }
+
+  .btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+  }
+
+  /* GENERATE SECTION */
+  .generate-section {
+    text-align: center;
+    padding: 40px 20px;
+  }
+
+  .generate-section h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    margin-bottom: 10px;
+  }
+
+  .generate-section p {
+    color: var(--text-muted);
+    margin-bottom: 30px;
+    font-size: 0.9rem;
+  }
+
+  /* RESULT */
+  #result-panel {
+    animation: fadeIn 0.4s ease;
+  }
+
+  .result-header {
+    background: linear-gradient(135deg, var(--tiffany) 0%, var(--tiffany-dark) 100%);
+    border-radius: var(--radius);
+    padding: 28px 32px;
+    color: white;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+
+  .result-header .result-icon { font-size: 2.6rem; }
+
+  .result-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    margin-bottom: 4px;
+  }
+
+  .result-header p { opacity: 0.85; font-size: 0.85rem; }
+
+  .result-content {
+    background: white;
+    border-radius: var(--radius);
+    padding: 36px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    font-size: 0.93rem;
+    line-height: 1.75;
+    color: var(--text);
+  }
+
+  .result-content h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.35rem;
+    color: var(--tiffany-dark);
+    margin: 26px 0 10px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--tiffany-light);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .result-content h2:first-child { margin-top: 0; }
+
+  .result-content h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--orange-dark);
+    margin: 18px 0 6px;
+  }
+
+  .result-content ul, .result-content ol {
+    padding-left: 22px;
+    margin: 8px 0 14px;
+  }
+
+  .result-content li { margin-bottom: 5px; }
+
+  .result-content strong { color: var(--tiffany-dark); }
+
+  .result-content em { color: var(--text-muted); font-style: italic; }
+
+  .result-content p { margin-bottom: 10px; }
+
+  /* LOADING */
+  .loading-overlay {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    text-align: center;
+  }
+
+  .loading-overlay.show { display: flex; }
+
+  .spinner {
+    width: 52px; height: 52px;
+    border: 4px solid var(--tiffany-light);
+    border-top-color: var(--tiffany);
+    border-radius: 50%;
+    animation: spin 0.9s linear infinite;
+    margin-bottom: 22px;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .loading-overlay h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+  }
+
+  .loading-overlay p { color: var(--text-muted); font-size: 0.87rem; }
+
+  .dots::after {
+    content: '...';
+    animation: dots 1.4s steps(4, end) infinite;
+  }
+
+  @keyframes dots {
+    0%, 20% { content: '.'; }
+    40% { content: '..'; }
+    60%, 100% { content: '...'; }
+  }
+
+  /* SUMMARY BADGES */
+  .summary-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 18px 0;
+  }
+
+  .badge {
+    padding: 6px 14px;
+    border-radius: 100px;
+    font-size: 0.78rem;
+    font-weight: 600;
+  }
+
+  .badge-tiffany { background: var(--tiffany-light); color: var(--tiffany-dark); }
+  .badge-orange { background: var(--orange-light); color: var(--orange-dark); }
+
+  /* PROGRESS INDICATOR */
+  .progress-bar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 28px;
+    align-items: center;
+  }
+
+  .progress-step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .progress-dot {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 700;
+    border: 2px solid var(--border);
+    color: var(--text-muted);
+    transition: all 0.3s;
+  }
+
+  .progress-dot.done { background: var(--tiffany); border-color: var(--tiffany); color: white; }
+  .progress-dot.active { background: white; border-color: var(--tiffany); color: var(--tiffany); box-shadow: 0 0 0 3px rgba(10,189,192,0.18); }
+
+  .progress-label { font-size: 0.75rem; color: var(--text-muted); font-weight: 500; }
+  .progress-dot.done + .progress-label,
+  .progress-dot.active + .progress-label { color: var(--tiffany-dark); }
+
+  .progress-line {
+    flex: 1;
+    height: 2px;
+    background: var(--border);
+    transition: all 0.3s;
+    max-width: 60px;
+  }
+
+  .progress-line.done { background: var(--tiffany); }
+
+  /* ERROR */
+  .error-box {
+    background: #fff5f5;
+    border: 1.5px solid #fca5a5;
+    border-radius: var(--radius-sm);
+    padding: 16px 20px;
+    color: #b91c1c;
+    font-size: 0.87rem;
+    margin-top: 16px;
+    display: none;
+  }
+
+  .error-box.show { display: block; }
+
+  /* DISCLAIMER */
+  .disclaimer {
+    background: var(--orange-light);
+    border-left: 4px solid var(--orange);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    padding: 14px 18px;
+    font-size: 0.8rem;
+    color: var(--orange-dark);
+    margin-top: 20px;
+    line-height: 1.5;
+  }
+
+  /* PRINT */
+  .print-btn {
+    background: white;
+    border: 1.5px solid var(--border);
+    color: var(--text-muted);
+    font-size: 0.84rem;
+    padding: 10px 18px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .print-btn:hover { border-color: var(--tiffany); color: var(--tiffany); }
+
+  .result-actions { display: flex; gap: 12px; margin-bottom: 22px; flex-wrap: wrap; }
+
+  @media print {
+    .tabs-bar, header, .tab-btn, .nav-btns, .result-actions { display: none !important; }
+    .tab-panel { display: block !important; }
+    .result-content { box-shadow: none; border: none; }
+  }
+
+  @media(max-width:600px) {
+    main { padding: 20px 16px 60px; }
+    .header-inner { padding: 16px 18px; }
+    .tabs-inner { padding: 0 8px; overflow-x: auto; }
+    .tab-btn { padding: 14px 14px; font-size: 0.78rem; }
+    .section-card { padding: 20px 18px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo-icon">🌿</div>
+    <div class="logo-text">
+      <h1>Nutri Secrets</h1>
+      <p>Nutrição terapêutica personalizada com base científica</p>
+    </div>
+  </div>
+</header>
+
+<div class="tabs-bar">
+  <div class="tabs-inner">
+    <button class="tab-btn active" onclick="goTab(0)">
+      <span class="tab-num">1</span> Dados Pessoais
+    </button>
+    <button class="tab-btn" onclick="goTab(1)">
+      <span class="tab-num">2</span> Sintomas & Exame
+    </button>
+    <button class="tab-btn" onclick="goTab(2)">
+      <span class="tab-num">3</span> Preferências
+    </button>
+    <button class="tab-btn" onclick="goTab(3)">
+      <span class="tab-num">✨</span> Meu Cardápio
+    </button>
+  </div>
+</div>
+
+<main>
+
+  <!-- TAB 1: DADOS PESSOAIS -->
+  <div class="tab-panel active" id="tab0">
+    <div class="progress-bar">
+      <div class="progress-step">
+        <div class="progress-dot active">1</div>
+        <span class="progress-label">Dados</span>
+      </div>
+      <div class="progress-line"></div>
+      <div class="progress-step">
+        <div class="progress-dot">2</div>
+        <span class="progress-label">Sintomas</span>
+      </div>
+      <div class="progress-line"></div>
+      <div class="progress-step">
+        <div class="progress-dot">3</div>
+        <span class="progress-label">Preferências</span>
+      </div>
+      <div class="progress-line"></div>
+      <div class="progress-step">
+        <div class="progress-dot">✨</div>
+        <span class="progress-label">Cardápio</span>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-title"><span class="icon">👤</span> Seus Dados Pessoais</div>
+      <div class="section-sub">Essas informações nos ajudam a calcular suas necessidades calóricas e criar um plano personalizado.</div>
+
+      <div class="row-2 field-group">
+        <div>
+          <label class="field-label">Nome</label>
+          <input type="text" id="nome" placeholder="Seu nome completo" />
+        </div>
+        <div>
+          <label class="field-label">Idade</label>
+          <input type="number" id="idade" placeholder="Ex: 35" min="1" max="120" />
+        </div>
+      </div>
+
+      <div class="row-3 field-group">
+        <div>
+          <label class="field-label">Peso atual (kg)</label>
+          <input type="number" id="peso" placeholder="Ex: 75" min="20" max="300" step="0.1" />
+        </div>
+        <div>
+          <label class="field-label">Altura (cm)</label>
+          <input type="number" id="altura" placeholder="Ex: 170" min="100" max="250" />
+        </div>
+        <div>
+          <label class="field-label">Objetivo de perda (kg)</label>
+          <input type="number" id="meta_perda" placeholder="Ex: 8 (ou 0)" min="0" max="200" step="0.5" />
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Sexo biológico</label>
+        <div class="chips-grid">
+          <span class="chip" onclick="selectSingle(this,'sexo')" data-val="feminino">♀️ Feminino</span>
+          <span class="chip" onclick="selectSingle(this,'sexo')" data-val="masculino">♂️ Masculino</span>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Nível de atividade física</label>
+        <div class="chips-grid">
+          <span class="chip" onclick="selectSingle(this,'atividade')" data-val="sedentario">😴 Sedentário</span>
+          <span class="chip" onclick="selectSingle(this,'atividade')" data-val="leve">🚶 Leve (1-2x/sem)</span>
+          <span class="chip" onclick="selectSingle(this,'atividade')" data-val="moderado">🏃 Moderado (3-4x/sem)</span>
+          <span class="chip" onclick="selectSingle(this,'atividade')" data-val="intenso">💪 Intenso (5+/sem)</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-btns">
+      <button class="btn btn-primary" onclick="goTab(1)">Próximo: Sintomas & Exame →</button>
+    </div>
+  </div>
+
+  <!-- TAB 2: SINTOMAS & EXAME -->
+  <div class="tab-panel" id="tab1">
+    <div class="progress-bar">
+      <div class="progress-step"><div class="progress-dot done">✓</div><span class="progress-label">Dados</span></div>
+      <div class="progress-line done"></div>
+      <div class="progress-step"><div class="progress-dot active">2</div><span class="progress-label">Sintomas</span></div>
+      <div class="progress-line"></div>
+      <div class="progress-step"><div class="progress-dot">3</div><span class="progress-label">Preferências</span></div>
+      <div class="progress-line"></div>
+      <div class="progress-step"><div class="progress-dot">✨</div><span class="progress-label">Cardápio</span></div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-title"><span class="icon">💊</span> Exame de Sangue (PDF)</div>
+      <div class="section-sub">Envie seu exame em PDF para que possamos analisar marcadores como glicemia, colesterol, enzimas hepáticas, vitaminas e muito mais.</div>
+
+      <div class="upload-area" id="uploadArea" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropFile(event)">
+        <input type="file" id="pdfInput" accept=".pdf" onchange="handleFile(event)" />
+        <div class="upload-icon">📋</div>
+        <h3>Clique ou arraste seu exame aqui</h3>
+        <p>Formato aceito: PDF • Máximo 20MB</p>
+      </div>
+
+      <div class="file-preview" id="filePreview">
+        <span class="file-icon">📄</span>
+        <div class="file-info">
+          <div class="file-name" id="fileName">exame.pdf</div>
+          <div class="file-size" id="fileSize">—</div>
+        </div>
+        <button class="file-remove" onclick="removeFile()" title="Remover">✕</button>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-title"><span class="icon">🩺</span> Seus Sintomas e Objetivos</div>
+      <div class="section-sub">Descreva o que sente, há quanto tempo, e quais são seus principais objetivos de saúde. Seja específico para uma análise mais precisa.</div>
+
+      <div class="field-group">
+        <label class="field-label">Descreva seus sintomas e objetivos de saúde *</label>
+        <textarea id="sintomas" placeholder="Ex: Tenho dor de cabeça frequente, sofro de gastrite há 3 anos, insônia, quero emagrecer e melhorar minha digestão. Sinto-me cansado(a) com frequência e tenho colesterol alto..."></textarea>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Sintomas mais comuns (selecione os que se aplicam)</label>
+        <div class="chips-grid" id="sintomasChips">
+          <span class="chip" onclick="toggleChip(this,'sint')">🤕 Dor de cabeça</span>
+          <span class="chip" onclick="toggleChip(this,'sint')">😴 Insônia</span>
+          <span class="chip" onclick="toggleChip(this,'sint')">🔥 Gastrite / Refluxo</span>
+          <span class="chip" onclick="toggleChip(this,'sint')">💨 Inchaço / Gases</span>
+          <span class="chip" onclick="toggleChip(this,'sint')">😰 Ansiedade</span>
+          <span class="chip" onclick="toggleChip(this,'sint')">😔 Depressão / Humor</span>
+          <span class="chip" onclick="toggleChip(this,'sint')">🩸 Colesterol alto</span>
+          <span class="chip" onclick="toggleChip(this,'sint')">🍬 Glicemia elevada</span>
+          <span class="chip" onclick="toggleChip(this,'sint')">⚡ Cansaço / Fadiga</span>
+          <span class="chip" onclick="toggleChip(this,'sint')">🫀 Pressão alta</span>
+          <span class="chip" onclick="toggleChip(this,'sint')">🦴 Dores articulares</span>
+          <span class="chip" onclick="toggleChip(this,'sint')">🧠 Névoa mental</span>
+          <span class="chip" onclick="toggleChip(this,'sint')">🌸 TPM / Hormonal</span>
+          <span class="chip" onclick="toggleChip(this,'sint')">⚖️ Emagrecer</span>
+          <span class="chip" onclick="toggleChip(this,'sint')">💪 Ganhar massa</span>
+          <span class="chip" onclick="toggleChip(this,'sint')">🦠 Intestino irregular</span>
+          <span class="chip" onclick="toggleChip(this,'sint')">🔬 Fígado / Enzimas alt.</span>
+          <span class="chip" onclick="toggleChip(this,'sint')">🦋 Tireoide</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-btns">
+      <button class="btn btn-secondary" onclick="goTab(0)">← Voltar</button>
+      <button class="btn btn-primary" onclick="goTab(2)">Próximo: Preferências →</button>
+    </div>
+  </div>
+
+  <!-- TAB 3: PREFERENCIAS -->
+  <div class="tab-panel" id="tab2">
+    <div class="progress-bar">
+      <div class="progress-step"><div class="progress-dot done">✓</div><span class="progress-label">Dados</span></div>
+      <div class="progress-line done"></div>
+      <div class="progress-step"><div class="progress-dot done">✓</div><span class="progress-label">Sintomas</span></div>
+      <div class="progress-line done"></div>
+      <div class="progress-step"><div class="progress-dot active">3</div><span class="progress-label">Preferências</span></div>
+      <div class="progress-line"></div>
+      <div class="progress-step"><div class="progress-dot">✨</div><span class="progress-label">Cardápio</span></div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-title"><span class="icon">🌱</span> Restrições e Preferências Alimentares</div>
+      <div class="section-sub">Selecione todas as preferências que se aplicam. Seu cardápio será 100% adaptado a elas.</div>
+
+      <div class="chips-grid">
+        <span class="chip" onclick="toggleChip(this,'diet')"><span class="chip-icon">🌿</span> Vegano</span>
+        <span class="chip" onclick="toggleChip(this,'diet')"><span class="chip-icon">🥚</span> Vegetariano</span>
+        <span class="chip" onclick="toggleChip(this,'diet')"><span class="chip-icon">🌾</span> Sem glúten</span>
+        <span class="chip" onclick="toggleChip(this,'diet')"><span class="chip-icon">🥛</span> Sem leite e derivados</span>
+        <span class="chip" onclick="toggleChip(this,'diet')"><span class="chip-icon">🫙</span> Sem lactose</span>
+        <span class="chip" onclick="toggleChip(this,'diet')"><span class="chip-icon">🥗</span> Low carb</span>
+        <span class="chip" onclick="toggleChip(this,'diet')"><span class="chip-icon">💪</span> Alto em proteína</span>
+        <span class="chip" onclick="toggleChip(this,'diet')"><span class="chip-icon">🥑</span> Cetogênico</span>
+        <span class="chip" onclick="toggleChip(this,'diet')"><span class="chip-icon">🌊</span> Baixo em histamina</span>
+        <span class="chip" onclick="toggleChip(this,'diet')"><span class="chip-icon">🫘</span> Low FODMAP</span>
+        <span class="chip" onclick="toggleChip(this,'diet')"><span class="chip-icon">🐟</span> Pescetariano</span>
+        <span class="chip" onclick="toggleChip(this,'diet')"><span class="chip-icon">🩺</span> Anti-inflamatório</span>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-title"><span class="icon">🍽️</span> Refeições do Dia</div>
+      <div class="section-sub">Selecione quais refeições deseja incluir no seu cardápio terapêutico.</div>
+
+      <div class="chips-grid">
+        <span class="chip meal-chip" onclick="toggleChip(this,'meal')"><span class="chip-icon">☀️</span> Café da manhã</span>
+        <span class="chip meal-chip" onclick="toggleChip(this,'meal')"><span class="chip-icon">🍎</span> Lanche da manhã</span>
+        <span class="chip meal-chip" onclick="toggleChip(this,'meal')"><span class="chip-icon">🍲</span> Almoço</span>
+        <span class="chip meal-chip" onclick="toggleChip(this,'meal')"><span class="chip-icon">🫐</span> Lanche da tarde</span>
+        <span class="chip meal-chip" onclick="toggleChip(this,'meal')"><span class="chip-icon">🌙</span> Jantar</span>
+        <span class="chip meal-chip" onclick="toggleChip(this,'meal')"><span class="chip-icon">🌛</span> Ceia</span>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-title"><span class="icon">✏️</span> Observações Adicionais</div>
+      <div class="section-sub">Alimentos que não gosta, alergias específicas, horários de refeições, contexto de vida — tudo é bem-vindo.</div>
+      <div class="field-group">
+        <label class="field-label">Informações extras (opcional)</label>
+        <textarea id="extras" placeholder="Ex: Não gosto de beterraba. Almoço fora de casa todos os dias. Tenho alergia a frutos do mar. Acordo às 6h..."></textarea>
+      </div>
+    </div>
+
+    <div class="generate-section">
+      <h2>Tudo pronto? ✨</h2>
+      <p>Clique abaixo para gerar seu cardápio terapêutico personalizado com base científica.</p>
+      <button class="btn btn-orange" id="generateBtn" onclick="generateMenu()">
+        🌿 Gerar Meu Cardápio Terapêutico
+      </button>
+      <div class="error-box" id="errorBox">⚠️ <span id="errorMsg">Erro ao gerar cardápio. Tente novamente.</span></div>
+    </div>
+
+    <div class="nav-btns" style="justify-content:flex-start; margin-top:0;">
+      <button class="btn btn-secondary" onclick="goTab(1)">← Voltar</button>
+    </div>
+  </div>
+
+  <!-- TAB 4: RESULTADO -->
+  <div class="tab-panel" id="tab3">
+    <div id="loadingSection" class="loading-overlay show">
+      <div class="spinner"></div>
+      <h3>Analisando seus dados<span class="dots"></span></h3>
+      <p>Estamos correlacionando seus exames, sintomas e preferências com nossa base científica de nutrição terapêutica.</p>
+    </div>
+
+    <div id="result-panel" style="display:none">
+      <div class="result-header">
+        <div class="result-icon">🌿</div>
+        <div>
+          <h2>Seu Cardápio Terapêutico Personalizado</h2>
+          <p id="resultSubtitle">Gerado com base nos seus dados, exames e preferências</p>
+        </div>
+      </div>
+
+      <div class="result-actions">
+        <button class="print-btn" onclick="window.print()">🖨️ Imprimir / Salvar PDF</button>
+        <button class="print-btn" onclick="goTab(0)">🔄 Gerar novo cardápio</button>
+      </div>
+
+      <div class="result-content" id="resultContent"></div>
+
+      <div class="disclaimer">
+        ⚠️ <strong>Aviso importante:</strong> Este cardápio é uma sugestão educativa baseada em evidências científicas da nutrição terapêutica. Não substitui a consulta com médico ou nutricionista. Sempre busque acompanhamento profissional antes de fazer mudanças significativas na sua alimentação.
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+  // ——— STATE ———
+  let pdfBase64 = null;
+  let pdfFileName = '';
+  let currentTab = 0;
+
+  // ——— TABS ———
+  function goTab(idx) {
+    document.querySelectorAll('.tab-panel').forEach((p,i) => p.classList.toggle('active', i===idx));
+    document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active', i===idx));
+    currentTab = idx;
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  // ——— CHIPS ———
+  function toggleChip(el, group) {
+    el.classList.toggle('selected');
+  }
+
+  function selectSingle(el, group) {
+    document.querySelectorAll(`.chip[data-val]`).forEach(c => {
+      if (c.getAttribute('data-group') === group || true) {
+        // find siblings
+      }
+    });
+    // Simple: deselect same-group chips
+    el.parentElement.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+
+  function getChips(groupClass) {
+    return [...document.querySelectorAll(`.chip.${groupClass}.selected`)].map(c => c.textContent.trim());
+  }
+
+  function getSelectedChips(containerId) {
+    return [...document.querySelectorAll(`#${containerId} .chip.selected`)].map(c => c.textContent.trim());
+  }
+
+  function getAllSelected(selector) {
+    return [...document.querySelectorAll(`${selector}.selected`)].map(c => c.textContent.trim());
+  }
+
+  // ——— FILE UPLOAD ———
+  function handleFile(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    processFile(file);
+  }
+
+  function dragOver(e) {
+    e.preventDefault();
+    document.getElementById('uploadArea').classList.add('drag-over');
+  }
+
+  function dragLeave(e) {
+    document.getElementById('uploadArea').classList.remove('drag-over');
+  }
+
+  function dropFile(e) {
+    e.preventDefault();
+    document.getElementById('uploadArea').classList.remove('drag-over');
+    const file = e.dataTransfer.files[0];
+    if (file && file.type === 'application/pdf') processFile(file);
+  }
+
+  function processFile(file) {
+    pdfFileName = file.name;
+    document.getElementById('fileName').textContent = file.name;
+    document.getElementById('fileSize').textContent = (file.size / 1024).toFixed(1) + ' KB';
+    document.getElementById('filePreview').classList.add('show');
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      pdfBase64 = e.target.result.split(',')[1];
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function removeFile() {
+    pdfBase64 = null;
+    pdfFileName = '';
+    document.getElementById('pdfInput').value = '';
+    document.getElementById('filePreview').classList.remove('show');
+  }
+
+  // ——— COLLECT DATA ———
+  function collectData() {
+    return {
+      nome: document.getElementById('nome').value.trim(),
+      idade: document.getElementById('idade').value,
+      peso: document.getElementById('peso').value,
+      altura: document.getElementById('altura').value,
+      meta_perda: document.getElementById('meta_perda').value,
+      sexo: document.querySelector('#tab0 .chip[data-val].selected')?.getAttribute('data-val') || 'não informado',
+      atividade: (() => {
+        const chips = document.querySelectorAll('#tab0 .chip');
+        const atv = ['sedentario','leve','moderado','intenso'];
+        for (const c of chips) {
+          if (c.classList.contains('selected') && atv.includes(c.getAttribute('data-val'))) return c.getAttribute('data-val');
+        }
+        return 'não informado';
+      })(),
+      sintomas_texto: document.getElementById('sintomas').value.trim(),
+      sintomas_chips: getAllSelected('#sintomasChips .chip'),
+      dietas: getAllSelected('.chip[onclick*="diet"]'),
+      refeicoes: getAllSelected('.chip.meal-chip'),
+      extras: document.getElementById('extras').value.trim()
+    };
+  }
+
+  // ——— BUILD PROMPT ———
+  function buildPrompt(d) {
+    // Calculate BMI
+    let bmi = '';
+    let tmb = '';
+    if (d.peso && d.altura) {
+      const h = parseFloat(d.altura)/100;
+      const b = (parseFloat(d.peso) / (h*h)).toFixed(1);
+      bmi = `IMC: ${b}`;
+      // Harris-Benedict
+      if (d.sexo === 'feminino') {
+        tmb = (655.1 + 9.563*parseFloat(d.peso) + 1.85*parseFloat(d.altura) - 4.676*parseFloat(d.idade||30)).toFixed(0);
+      } else {
+        tmb = (66.5 + 13.75*parseFloat(d.peso) + 5.003*parseFloat(d.altura) - 6.755*parseFloat(d.idade||30)).toFixed(0);
+      }
+    }
+
+    const hasPdf = pdfBase64 ? 'Sim (PDF anexado — analise os resultados laboratoriais presentes)' : 'Não foi enviado exame';
+
+    return `Você é um especialista em nutrição terapêutica e funcional com vasto conhecimento em fitoterapia, nutraceutica, medicina integrativa e bases científicas da nutrição medicinal.
+
+DADOS DO PACIENTE:
+- Nome: ${d.nome || 'Paciente'}
+- Sexo: ${d.sexo} | Idade: ${d.idade || '?'} anos
+- Peso: ${d.peso || '?'} kg | Altura: ${d.altura || '?'} cm | ${bmi}
+- Taxa Metabólica Basal estimada (Harris-Benedict): ${tmb ? tmb + ' kcal/dia' : 'não calculado'}
+- Nível de atividade: ${d.atividade}
+- Objetivo de perda de peso: ${d.meta_perda ? d.meta_perda + ' kg' : 'não definido'}
+- Exame de sangue: ${hasPdf}
+
+SINTOMAS E QUEIXAS:
+Texto livre: "${d.sintomas_texto || 'não informado'}"
+Chips selecionados: ${d.sintomas_chips.join(', ') || 'nenhum'}
+
+PREFERÊNCIAS ALIMENTARES: ${d.dietas.join(', ') || 'nenhuma restrição específica'}
+REFEIÇÕES DESEJADAS: ${d.refeicoes.join(', ') || 'não especificado'}
+EXTRAS: ${d.extras || 'nenhum'}
+
+INSTRUÇÕES PARA A RESPOSTA:
+Crie um CARDÁPIO TERAPÊUTICO PERSONALIZADO em português brasileiro, estruturado da seguinte forma:
+
+## 🔍 Análise Terapêutica Personalizada
+Análise dos dados do paciente, sintomas reportados, ${pdfBase64 ? 'e achados relevantes do exame de sangue (identifique valores que precisam de atenção nutricional)' : 'e condições de saúde'}. Correlacione sintomas com possíveis deficiências nutricionais com embasamento científico.
+
+## 📊 Perfil Nutricional Recomendado
+Com base nos dados (peso, altura, objetivo, atividade), informe:
+- Meta calórica diária usando método VENTA ou similar
+- Distribuição ideal de macronutrientes (%)
+- Nutrientes prioritários para os sintomas relatados
+
+## 🌿 Cardápio Terapêutico Diário
+Para CADA refeição solicitada (${d.refeicoes.join(', ')}), apresente:
+- Nome da refeição
+- Alimentos sugeridos com quantidades aproximadas
+- Por que cada alimento foi escolhido (poder medicinal / função terapêutica)
+- Dica de preparo quando relevante
+Garanta que os alimentos sejam: adequados às restrições (${d.dietas.join(', ')}), anti-inflamatórios quando cabível, e correlacionados com os sintomas.
+Exemplos de correlação terapêutica esperada: insônia → alimentos ricos em fitomelatonina (cereja, kiwi, banana) no jantar; gastrite → evitar ácidos, incluir repolho, gengibre baixo dose; fígado alterado → cardo mariano, alcachofra, curcuma; dor de cabeça → magnésio, ômega-3; colesterol → aveia, linhaça, berinjela.
+
+## 🍵 Chás e Suplementos Funcionais (Base Científica)
+Liste 3-5 chás medicinais com evidência científica relevantes para os sintomas. Inclua forma de preparo e horário ideal.
+
+## 🏃 Hábitos de Vida Terapêuticos
+Recomendações baseadas em evidências sobre:
+- Exercícios físicos ideais para o perfil
+- Práticas de meditação / mindfulness / respiração
+- Higiene do sono
+- Exposição solar e vitamina D
+- Redução de estresse / cortisol
+- Hidratação adequada
+- Orientações sobre alimentos ultra-processados
+
+## 📝 Lista de Compras Terapêutica
+Lista compacta dos principais alimentos recomendados agrupados por categoria (frutas, vegetais, proteínas, grãos, temperos funcionais).
+
+Escreva de forma clara, acolhedora e profissional. Use emojis moderadamente para facilitar a leitura. Fundamenta cada recomendação em ciência, citando mecanismos quando relevante (ex: "o magnésio age como cofator na síntese de serotonina..."). Seja específico e prático.`;
+  }
+
+  // ——— GENERATE ———
+  async function generateMenu() {
+    const d = collectData();
+
+    // Validation
+    const sintomasPreench = d.sintomas_texto || d.sintomas_chips.length > 0;
+    const refeicoesSel = d.refeicoes.length > 0;
+
+    if (!sintomasPreench) {
+      showError('Por favor, descreva seus sintomas ou selecione ao menos um chip de sintoma.');
+      return;
+    }
+    if (!refeicoesSel) {
+      showError('Selecione ao menos uma refeição desejada na aba de Preferências.');
+      goTab(2);
+      return;
+    }
+
+    hideError();
+    goTab(3);
+
+    document.getElementById('loadingSection').classList.add('show');
+    document.getElementById('result-panel').style.display = 'none';
+
+    try {
+      const prompt = buildPrompt(d);
+
+      const messages = [];
+      if (pdfBase64) {
+        messages.push({
+          role: 'user',
+          content: [
+            {
+              type: 'document',
+              source: { type: 'base64', media_type: 'application/pdf', data: pdfBase64 }
+            },
+            { type: 'text', text: prompt }
+          ]
+        });
+      } else {
+        messages.push({ role: 'user', content: prompt });
+      }
+
+      const response = await fetch('/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 4000,
+          messages
+        })
+      });
+
+      if (!response.ok) {
+        const err = await response.json().catch(()=>({}));
+        throw new Error(err.error?.message || `Erro ${response.status}`);
+      }
+
+      const data = await response.json();
+      const text = data.content.map(c => c.text || '').join('\n');
+
+      document.getElementById('loadingSection').classList.remove('show');
+      document.getElementById('result-panel').style.display = 'block';
+      document.getElementById('resultSubtitle').textContent =
+        `Para ${d.nome || 'você'} · ${d.peso ? d.peso+'kg' : ''} · ${d.dietas.slice(0,2).join(', ')||'Sem restrições'} · ${d.refeicoes.join(', ')}`;
+
+      document.getElementById('resultContent').innerHTML = formatResult(text);
+
+    } catch (err) {
+      document.getElementById('loadingSection').classList.remove('show');
+      goTab(2);
+      showError('Erro ao gerar cardápio: ' + err.message);
+    }
+  }
+
+  function showError(msg) {
+    const box = document.getElementById('errorBox');
+    document.getElementById('errorMsg').textContent = msg;
+    box.classList.add('show');
+    box.scrollIntoView({behavior:'smooth', block:'center'});
+  }
+
+  function hideError() {
+    document.getElementById('errorBox').classList.remove('show');
+  }
+
+  // ——— FORMAT MARKDOWN-LIKE ———
+  function formatResult(text) {
+    return text
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+      .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.+?)\*/g, '<em>$1</em>')
+      .replace(/^- (.+)$/gm, '<li>$1</li>')
+      .replace(/(<li>.*<\/li>\n?)+/g, '<ul>$&</ul>')
+      .replace(/^\d+\. (.+)$/gm, '<li>$1</li>')
+      .replace(/\n\n/g, '</p><p>')
+      .replace(/\n/g, '<br>')
+      .replace(/^(?!<[h|u|o|l])(.+)$/gm, '<p>$1</p>')
+      .replace(/<p><\/p>/g,'')
+      .replace(/<p>(<[huo])/g,'$1')
+      .replace(/(<\/[huo][^>]*>)<\/p>/g,'$1');
+  }
+
+  // ——— CHIP SINGLE SELECT for sexo/atividade ———
+  document.querySelectorAll('#tab0 .chips-grid').forEach(grid => {
+    grid.querySelectorAll('.chip').forEach(chip => {
+      chip.addEventListener('click', function() {
+        grid.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+        this.classList.add('selected');
+      });
+    });
+  });
+</script>
+
+</body>
+</html>
