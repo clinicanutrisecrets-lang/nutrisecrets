@@ -6,7 +6,7 @@ import { login } from './auth';
 import { getAllPatients } from './listPatients';
 import { extractPatientData } from './extractPatient';
 import { saveToScanner } from './saveToScanner';
-import { loadProgress, markDone, markError } from './progress';
+import { getProcessedIds } from './progress';
 import { logger } from './logger';
 
 async function main(): Promise<void> {
@@ -31,10 +31,10 @@ async function main(): Promise<void> {
     // 1. Login
     await login(page);
 
-    // 2. Progresso anterior
-    const progress = loadProgress();
-    const done = new Set(progress.processedIds);
-    logger.info(`Progresso carregado: ${done.size} pacientes já processados`);
+    // 2. Progresso — verifica no Supabase quem já foi migrado
+    logger.info('Verificando progresso no Supabase...');
+    const done = await getProcessedIds();
+    logger.info(`Já migrados: ${done.size} pacientes`);
 
     // 3. Lista de pacientes
     logger.info('Obtendo lista de pacientes...');
@@ -62,13 +62,11 @@ async function main(): Promise<void> {
         const data = await extractPatientData(page, patient);
         await saveToScanner(data);
 
-        markDone(progress, patient.id);
         successCount++;
         logger.info(`✅ Sucesso: ${patient.name}`);
       } catch (err: any) {
         errorCount++;
         logger.error(`❌ Erro em ${patient.name}: ${err.message}`);
-        markError(progress, patient.id, patient.name, err.message);
       }
 
       // Delay entre pacientes para não sobrecarregar o WebDiet

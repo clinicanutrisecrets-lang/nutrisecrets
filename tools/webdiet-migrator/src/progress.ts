@@ -1,36 +1,24 @@
-import * as fs from 'fs';
+import { createClient } from '@supabase/supabase-js';
 
-const FILE = process.env.PROGRESS_FILE || './progress.json';
+// O progresso é rastreado diretamente no Supabase pela coluna webdiet_id.
+// Isso garante que se a execução for interrompida (timeout, erro),
+// basta rodar de novo — pacientes já migrados são detectados e pulados.
 
-export interface Progress {
-  processedIds: string[];
-  errors: Array<{ id: string; name: string; error: string }>;
-  startedAt: string;
-  lastRunAt: string;
+function getSupabase() {
+  return createClient(
+    process.env.SCANNER_SUPABASE_URL!,
+    process.env.SCANNER_SUPABASE_SERVICE_ROLE_KEY!
+  );
 }
 
-export function loadProgress(): Progress {
-  if (fs.existsSync(FILE)) {
-    try {
-      return JSON.parse(fs.readFileSync(FILE, 'utf-8'));
-    } catch {
-      // arquivo corrompido — recomeça
-    }
-  }
-  return { processedIds: [], errors: [], startedAt: new Date().toISOString(), lastRunAt: '' };
-}
+export async function getProcessedIds(): Promise<Set<string>> {
+  const supabase = getSupabase();
+  const { data, error } = await supabase
+    .from('pacientes')
+    .select('webdiet_id')
+    .eq('nutricionista_id', process.env.NUTRI_SECRETS_ID!)
+    .not('webdiet_id', 'is', null);
 
-export function saveProgress(p: Progress): void {
-  p.lastRunAt = new Date().toISOString();
-  fs.writeFileSync(FILE, JSON.stringify(p, null, 2));
-}
-
-export function markDone(p: Progress, id: string): void {
-  if (!p.processedIds.includes(id)) p.processedIds.push(id);
-  saveProgress(p);
-}
-
-export function markError(p: Progress, id: string, name: string, error: string): void {
-  p.errors.push({ id, name, error });
-  saveProgress(p);
+  if (error) throw new Error(`Erro ao carregar progresso: ${error.message}`);
+  return new Set((data || []).map((r: { webdiet_id: string }) => r.webdiet_id));
 }
