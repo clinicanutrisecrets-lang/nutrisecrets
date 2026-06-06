@@ -12,7 +12,7 @@ export async function login(page: Page): Promise<void> {
   await page.click('button[type="submit"]');
 
   // Aguarda redirecionamento pós-login
-  await page.waitForURL((u) => !u.includes('/login'), { timeout: 20000 });
+  await page.waitForURL((u) => !u.href.includes('/login'), { timeout: 20000 });
   await page.waitForLoadState('networkidle');
 
   // Verifica se está logado de verdade
