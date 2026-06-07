@@ -16,7 +16,7 @@ jobs:
   migrate:
     name: Executar migração
     runs-on: ubuntu-latest
-    timeout-minutes: 360  # 6 horas — suficiente para ~1.600 pacientes
+    timeout-minutes: 360
 
     defaults:
       run:
@@ -44,21 +44,23 @@ jobs:
           WEBDIET_EMAIL: ${{ secrets.WEBDIET_EMAIL }}
           WEBDIET_PASSWORD: ${{ secrets.WEBDIET_PASSWORD }}
           SCANNER_SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SCANNER_SUPABASE_SERVICE_ROLE_KEY }}
-          NUTRI_SECRETS_ID_INPUT: ${{ inputs.nutri_id }}
         run: |
-          NUTRI_ID="${NUTRI_SECRETS_ID_INPUT:-f0813032-f6cf-4b36-9339-4c5d16293e25}"
-          cat > .env <<EOF
-          WEBDIET_URL=https://pt.webdiet.com.br
-          WEBDIET_EMAIL=${WEBDIET_EMAIL}
-          WEBDIET_PASSWORD=${WEBDIET_PASSWORD}
-          SCANNER_SUPABASE_URL=https://sjxrikjgxflzccrrirux.supabase.co
-          SCANNER_SUPABASE_SERVICE_ROLE_KEY=${SCANNER_SUPABASE_SERVICE_ROLE_KEY}
-          NUTRI_SECRETS_ID=${NUTRI_ID}
-          HEADLESS=true
-          DELAY_MS=${{ inputs.delay_ms }}
-          DOWNLOADS_PATH=./downloads
-          LOG_PATH=./logs
-          EOF
+          NUTRI_ID="${{ inputs.nutri_id }}"
+          NUTRI_ID="${NUTRI_ID:-f0813032-f6cf-4b36-9339-4c5d16293e25}"
+          {
+            echo "WEBDIET_URL=https://pt.webdiet.com.br"
+            echo "WEBDIET_EMAIL=$WEBDIET_EMAIL"
+            echo "WEBDIET_PASSWORD=$WEBDIET_PASSWORD"
+            echo "SCANNER_SUPABASE_URL=https://sjxrikjgxflzccrrirux.supabase.co"
+            echo "SCANNER_SUPABASE_SERVICE_ROLE_KEY=$SCANNER_SUPABASE_SERVICE_ROLE_KEY"
+            echo "NUTRI_SECRETS_ID=$NUTRI_ID"
+            echo "HEADLESS=true"
+            echo "DELAY_MS=${{ inputs.delay_ms }}"
+            echo "DOWNLOADS_PATH=./downloads"
+            echo "LOG_PATH=./logs"
+          } > .env
+          echo "✅ .env criado com $(wc -l < .env) linhas"
+          echo "Variáveis presentes: $(grep -c '=' .env)"
 
       - name: Executar migração
         run: npm start

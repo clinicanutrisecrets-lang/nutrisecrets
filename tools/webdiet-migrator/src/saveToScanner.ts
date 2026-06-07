@@ -4,12 +4,17 @@ import { PatientFullData } from './types';
 import { PerfilData } from './extractPerfil';
 import { logger } from './logger';
 
-const supabase = createClient(
-  process.env.SCANNER_SUPABASE_URL!,
-  process.env.SCANNER_SUPABASE_SERVICE_ROLE_KEY!
-);
+// Lazy — criado só quando chamado, depois do dotenv já ter carregado
+function getSupabase() {
+  return createClient(
+    process.env.SCANNER_SUPABASE_URL!,
+    process.env.SCANNER_SUPABASE_SERVICE_ROLE_KEY!
+  );
+}
 
-const NUTRI_ID = process.env.NUTRI_SECRETS_ID!;
+function getNutriId() {
+  return process.env.NUTRI_SECRETS_ID!;
+}
 
 // Bucket por tipo de exame
 const BUCKET_MAP: Record<string, string> = {
@@ -21,13 +26,13 @@ const BUCKET_MAP: Record<string, string> = {
 async function uploadPDF(filePath: string, bucket: string, storagePath: string): Promise<string | null> {
   try {
     const buffer = fs.readFileSync(filePath);
-    const { error } = await supabase.storage.from(bucket).upload(storagePath, buffer, {
+    const { error } = await getSupabase().storage.from(bucket).upload(storagePath, buffer, {
       contentType: 'application/pdf',
       upsert: true,
     });
     if (error) throw error;
 
-    const { data } = supabase.storage.from(bucket).getPublicUrl(storagePath);
+    const { data } = getSupabase().storage.from(bucket).getPublicUrl(storagePath);
     return data.publicUrl;
   } catch (err: any) {
     logger.error(`Upload falhou (${bucket}/${storagePath}): ${err.message}`);
@@ -43,11 +48,11 @@ export async function saveToScanner(
     .map((a) => `[${a.data}] ${a.titulo}\n${a.texto}`)
     .join('\n\n---\n\n');
 
-  const { data: existing } = await supabase
+  const { data: existing } = await getSupabase()
     .from('pacientes')
     .select('id')
     .eq('webdiet_id', data.webdietId)
-    .eq('nutricionista_id', NUTRI_ID)
+    .eq('nutricionista_id', getNutriId())
     .maybeSingle();
 
   let pacienteId: string;
@@ -56,10 +61,10 @@ export async function saveToScanner(
     pacienteId = existing.id;
     logger.info(`  Paciente já existe: ${pacienteId}`);
   } else {
-    const { data: novo, error } = await supabase
+    const { data: novo, error } = await getSupabase()
       .from('pacientes')
       .insert({
-        nutricionista_id: NUTRI_ID,
+        nutricionista_id: getNutriId(),
         nome: data.perfil.nome || data.name.split(' ')[0],
         sobrenome: data.perfil.sobrenome || data.name.split(' ').slice(1).join(' '),
         email: data.perfil.email || null,
@@ -89,8 +94,8 @@ export async function saveToScanner(
       const ext = `${pacienteId}/${exame.tipo}_${Date.now()}.pdf`;
       const url = await uploadPDF(exame.pdfPath, bucket, ext);
 
-      const { error } = await supabase.from('exames_paciente').insert({
-        nutricionista_id: NUTRI_ID,
+      const { error } = await getSupabase().from('exames_paciente').insert({
+        nutricionista_id: getNutriId(),
         paciente_id: pacienteId,
         tipo: exame.tipo,
         data_exame: parseDateBR(exame.dataExame) || null,
@@ -119,8 +124,8 @@ export async function saveToScanner(
         );
       }
 
-      const { error } = await supabase.from('planos_alimentares').insert({
-        nutricionista_id: NUTRI_ID,
+      const { error } = await getSupabase().from('planos_alimentares').insert({
+        nutricionista_id: getNutriId(),
         paciente_id: pacienteId,
         titulo: cardapio.titulo,
         variante: 'a',
@@ -150,8 +155,8 @@ export async function saveToScanner(
         );
       }
 
-      const { error } = await supabase.from('suplementos_prescritos').insert({
-        nutricionista_id: NUTRI_ID,
+      const { error } = await getSupabase().from('suplementos_prescritos').insert({
+        nutricionista_id: getNutriId(),
         paciente_id: pacienteId,
         suplementos: prescricao.suplementos,
         observacoes: `[${prescricao.titulo}]\n\n${prescricao.textoOriginal}`.trim(),
