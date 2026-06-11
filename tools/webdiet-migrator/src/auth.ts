@@ -87,7 +87,7 @@ export async function login(page: Page): Promise<void> {
   await page.waitForTimeout(3000);
 
   if (!page.url().includes('/login')) {
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded', { timeout: 10000 }).catch(() => {});
     logger.info('Login OK via Enter');
     await screenshot(page, '5-login-sucesso');
     return;
@@ -123,7 +123,7 @@ export async function login(page: Page): Promise<void> {
   }
 
   if (!page.url().includes('/login')) {
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded', { timeout: 10000 }).catch(() => {});
     logger.info('Login OK via clique');
     await screenshot(page, '5-login-sucesso');
     return;
@@ -144,7 +144,7 @@ export async function login(page: Page): Promise<void> {
   await page.waitForTimeout(3000);
 
   if (!page.url().includes('/login')) {
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded', { timeout: 10000 }).catch(() => {});
     logger.info('Login OK via JavaScript');
     await screenshot(page, '5-login-sucesso');
     return;

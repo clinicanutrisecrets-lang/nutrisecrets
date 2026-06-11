@@ -41,7 +41,7 @@ export async function extractCardapio(page: Page, patientId: string): Promise<Ca
 
       // Clica no plano para abrir
       await planItems[i].click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded', { timeout: 10000 }).catch(() => {});
       await page.waitForTimeout(1000);
 
       // Tenta baixar o PDF do plano

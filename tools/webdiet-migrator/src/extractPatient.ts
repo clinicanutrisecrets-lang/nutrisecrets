@@ -9,7 +9,7 @@ import { logger } from './logger';
 
 async function abrirPaciente(page: Page, patient: PatientSummary): Promise<PerfilData> {
   const url = process.env.WEBDIET_URL! + patient.profileUrl;
-  await page.goto(url, { waitUntil: 'networkidle' });
+  await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 30000 });
   await page.waitForTimeout(800);
 
   // Se apareceu o modal "Você está realizando uma nova consulta?"
@@ -20,7 +20,7 @@ async function abrirPaciente(page: Page, patient: PatientSummary): Promise<Perfi
 
   if (await naoRegistrar.isVisible({ timeout: 3000 }).catch(() => false)) {
     await naoRegistrar.click();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded', { timeout: 10000 }).catch(() => {});
     logger.info('  Modal de nova consulta dispensado');
   }
 

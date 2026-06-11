@@ -6,7 +6,7 @@ export async function getAllPatients(page: Page): Promise<PatientSummary[]> {
   const base = process.env.WEBDIET_URL!;
 
   // Vai direto para a lista de pacientes
-  await page.goto(base + '/pacientes', { waitUntil: 'networkidle' });
+  await page.goto(base + '/pacientes', { waitUntil: 'domcontentloaded', timeout: 30000 });
 
   // Aguarda o primeiro paciente aparecer
   await page.waitForSelector('a[href*="/paciente/"], a[href*="/pacientes/"]', { timeout: 15000 });

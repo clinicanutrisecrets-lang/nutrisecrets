@@ -56,7 +56,7 @@ export async function clickSidebarItem(page: Page, label: string): Promise<void>
   const item = page.locator(`text="${label}"`).first();
   if (await item.isVisible({ timeout: 3000 })) {
     await item.click();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded', { timeout: 10000 }).catch(() => {});
     await page.waitForTimeout(500);
   }
 }
