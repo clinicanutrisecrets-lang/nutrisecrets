@@ -12,9 +12,10 @@ export interface AnamneseRecord {
 
 export interface ExamePDF {
   nome: string;
-  tipo: 'sangue' | 'microbiota' | 'genetico';
+  tipo: 'sangue' | 'microbiota' | 'genetico' | 'coprologico';
   pdfPath: string;
   dataExame: string;
+  textoPDF?: string;
 }
 
 export interface CardapioData {
