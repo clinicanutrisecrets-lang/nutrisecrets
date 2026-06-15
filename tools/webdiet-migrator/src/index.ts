@@ -41,8 +41,14 @@ async function main(): Promise<void> {
     const allPatients = await getAllPatients(page);
     logger.info(`Total encontrado: ${allPatients.length}`);
 
-    const pending = allPatients.filter((p) => !done.has(p.id));
+    let pending = allPatients.filter((p) => !done.has(p.id));
     logger.info(`Pendentes: ${pending.length}`);
+
+    const maxPacientes = parseInt(process.env.MAX_PACIENTES || '0');
+    if (maxPacientes > 0) {
+      pending = pending.slice(0, maxPacientes);
+      logger.info(`Modo teste: processando apenas ${pending.length} paciente(s)`);
+    }
 
     if (pending.length === 0) {
       logger.info('Nada a fazer — todos os pacientes já foram migrados.');

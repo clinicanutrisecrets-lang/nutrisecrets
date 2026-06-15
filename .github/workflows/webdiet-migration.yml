@@ -11,6 +11,10 @@ on:
         description: 'Delay entre pacientes em ms (padrão: 3000)'
         required: false
         default: '3000'
+      max_pacientes:
+        description: 'Máximo de pacientes (0 = todos; coloque 1 para testar com 1 paciente)'
+        required: false
+        default: '0'
 
 jobs:
   migrate:
@@ -56,6 +60,7 @@ jobs:
             echo "NUTRI_SECRETS_ID=$NUTRI_ID"
             echo "HEADLESS=true"
             echo "DELAY_MS=${{ inputs.delay_ms }}"
+            echo "MAX_PACIENTES=${{ inputs.max_pacientes }}"
             echo "DOWNLOADS_PATH=./downloads"
             echo "LOG_PATH=./logs"
           } > .env
